@@ -1,29 +1,29 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          skeleton
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
+# Provides:          fluentd
+# Required-Start:    $network $local_fs
+# Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Example initscript
-# Description:       This file should be used to construct scripts to be
-#                    placed in /etc/init.d.
+# Short-Description: Log Everything in JSON
+# Description:       Fluentd init script.
 ### END INIT INFO
 
-# Author: Foo Bar <foobar@baz.org>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
+# Author: Kohei MATSUSHITA <ma2shita+git@ma2shita.jp>
 
 # Do NOT "set -e"
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="Description of the service"
-NAME=daemonexecutablename
-DAEMON=/usr/sbin/$NAME
-DAEMON_ARGS="--options args"
-PIDFILE=/var/run/$NAME.pid
+PATH=/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Log Everything in JSON"
+NAME=fluent
+PNAME=fluentd
+DAEMON=/usr/local/bin/${PNAME}
+USER=fluent
+GROUP=fluent
+PIDFILE=/var/run/${NAME}/${PNAME}.pid
+LOGFILE=/var/log/${NAME}/${PNAME}.log
+DAEMON_ARGS="--config /etc/${NAME}/${NAME}.conf --daemon ${PIDFILE} --log ${LOGFILE} --user ${USER} --group ${GROUP}"
 SCRIPTNAME=/etc/init.d/$NAME
 
 # Exit if the package is not installed
@@ -39,6 +39,10 @@ SCRIPTNAME=/etc/init.d/$NAME
 # Depend on lsb-base (>= 3.2-14) to ensure that this file is present
 # and status_of_proc is working.
 . /lib/lsb/init-functions
+
+if [ -f "/usr/local/lib/libjemalloc.so" ]; then
+	export LD_PRELOAD="/usr/local/lib/libjemalloc.so"
+fi
 
 #
 # Function that starts the daemon/service
@@ -69,7 +73,7 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $PNAME
 	RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
 	# Wait for children to finish too if this is a daemon that forks
