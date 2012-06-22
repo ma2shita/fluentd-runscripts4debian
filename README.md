@@ -34,15 +34,15 @@ Debian GNU/Linux 6.0 (squeeze)
 
 	$ sudo groupadd -r fluent
 	$ sudo useradd -r -c "Fluent user" -g fluent -s /bin/bash -d /home/fluent fluent
-	$ sudo mkdir -p /etc/fluent/ /var/run/fluent/ /var/log/fluent/ /home/fluent/
-	$ sudo chown -R fluent:fluent /etc/fluent/ /var/run/fluent/ /var/log/fluent/ /home/fluent/
+	$ sudo mkdir -p /etc/fluent/ /var/run/fluent/ /var/log/fluent/
+	$ sudo chown -R fluent:fluent /etc/fluent/ /var/run/fluent/ /var/log/fluent/
 	$ sudo -u fluent fluentd --setup /etc/fluent/
 
 	$ curl https://raw.github.com/ma2shita/fluentd-initscript4debian/master/fluentd | \
 	  sudo sh -c "cat - > /etc/init.d/fluentd ; chmod 755 /etc/init.d/fluentd"
 	$ sudo insserv -v -d /etc/init.d/fluentd
 
-`/etc/init.d/fluentd`説明
+/etc/init.d/fluentd 説明
 --------------------------
 
 fluentの実行コマンドは`/usr/local/bin`にインストールされている前提です。fluentのインストール時に`bindir`を指定するか、`/etc/init.d/fluentd`を調整してください。
