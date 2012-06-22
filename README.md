@@ -33,9 +33,9 @@ Debian GNU/Linux 6.0 (squeeze)
 ### setup env. & install initscript ###
 
 	$ sudo groupadd -r fluent
-	$ sudo useradd -r -c "Fluent user" -g fluent -s /bin/bash -d /home/fluent fluent
-	$ sudo mkdir -p /etc/fluent/ /var/run/fluent/ /var/log/fluent/
-	$ sudo chown -R fluent:fluent /etc/fluent/ /var/run/fluent/ /var/log/fluent/
+	$ sudo useradd -r -c "Fluent user" -g fluent -s /bin/bash -d /var/lib/fluent fluent
+	$ sudo mkdir -p /etc/fluent/ /var/run/fluent/ /var/log/fluent/ /var/lib/fluent/
+	$ sudo chown -R fluent:fluent /etc/fluent/ /var/run/fluent/ /var/log/fluent/ /var/lib/fluent/
 	$ sudo -u fluent fluentd --setup /etc/fluent/
 
 	$ curl https://raw.github.com/ma2shita/fluentd-initscript4debian/master/fluentd | \
