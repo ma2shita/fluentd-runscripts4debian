@@ -97,6 +97,11 @@ do_reload() {
 	return 0
 }
 
+do_flush() {
+	start-stop-daemon --stop --signal USR1 --quiet --pidfile $PIDFILE --name $PNAME
+	return 0
+}
+
 case "$1" in
   start)
 	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
@@ -120,6 +125,11 @@ case "$1" in
   reload)
 	log_daemon_msg "Reloading $DESC" "$NAME"
 	do_reload
+	log_end_msg $?
+	;;
+  flush)
+	log_daemon_msg "Flushing and re-opening logfile $DESC" "$NAME"
+	do_flush
 	log_end_msg $?
 	;;
   restart)
@@ -146,7 +156,7 @@ case "$1" in
 	;;
   *)
 	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
-	echo "Usage: $SCRIPTNAME {start|stop|status|restart}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|status|restart|flush}" >&2
 	exit 3
 	;;
 esac
