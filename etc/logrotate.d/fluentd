@@ -1,0 +1,14 @@
+/var/log/fluent/fluentd.log {
+	size 200M
+	rotate 6
+	missingok
+	create 644 fluent fluent
+	compress
+	delaycompress
+	notifempty
+	sharedscripts
+	postrotate
+		[ ! -f /var/run/fluent/fluentd.pid ] || kill -USR1 `cat /var/run/fluent/fluentd.pid`
+	endscript
+}
+
