@@ -6,7 +6,8 @@ Fluentd START/STOP initscript for Debian/GNU Linux 6.0 (squeeze)
 Overview
 --------
 
-Fluentdにはinitscriptが同梱されていないので、daemon運用するのが面倒。なので、それを楽にするために作りました。
+Fluentdにはinitscriptやlogrotate用スクリプトが同梱されていないので、運用するのがちょっと面倒。
+なので、それを楽にするために作りました。
 
 
 QuickStart
@@ -30,7 +31,7 @@ Debian GNU/Linux 6.0 (squeeze)
 	sudo gem install fluentd --bindir /usr/local/bin
 
 
-### setup env. & install initscript ###
+### setup env. & install scripts ###
 
 	$ sudo groupadd -r fluent
 	$ sudo useradd -r -c "Fluent user" -g fluent -s /bin/bash -d /var/lib/fluent fluent
@@ -38,17 +39,24 @@ Debian GNU/Linux 6.0 (squeeze)
 	$ sudo chown -R fluent:fluent /etc/fluent/ /var/run/fluent/ /var/log/fluent/ /var/lib/fluent/
 	$ sudo -u fluent fluentd --setup /etc/fluent/
 
-	$ curl https://raw.github.com/ma2shita/fluentd-initscript4debian/master/fluentd | \
+	$ curl https://raw.github.com/ma2shita/fluentd-runscripts4debian/master/etc/init.d/fluentd | \
 	  sudo sh -c "cat - > /etc/init.d/fluentd ; chmod 755 /etc/init.d/fluentd"
 	$ sudo insserv -v -d /etc/init.d/fluentd
+	$ curl https://raw.github.com/ma2shita/fluentd-runscripts4debian/master/etc/logrotate.d/fluentd | \
+	  sudo sh -c "cat - > /etc/logrotate.d/fluentd"
+
 
 /etc/init.d/fluentd 説明
---------------------------
+------------------------
 
-fluentの実行コマンドは`/usr/local/bin`にインストールされている前提です。fluentのインストール時に`bindir`を指定するか、`/etc/init.d/fluentd`を調整してください。
+`/etc/init.d/fluentd reload`は SIGHUPを、`/etc/init.d/fluentd flush`は SIGUSR1をそれぞれ送っているだけです。
+
+fluentの実行コマンドは`/usr/local/bin`にインストールされている前提です。fluentをgemでのインストールする時に`bindir`を指定するか、`/etc/init.d/fluentd`を調整してください。
 
 fluentdの実行ユーザーは`fluent`です。pidファイルやログファイルの格納先のownerに気をつけてください。
 
-末尾にdがついたり、つかなかったりしてます、ややこしくてごめんなさい。
+[jemalloc](http://www.canonware.com/jemalloc/) が`/usr/local`にインストールされていれば、それを`LD_PRELOAD`するようにしています。
+
+末尾にdがついたり、つかなかったり。ややこしくてごめんなさい。
 
 [EoF]
