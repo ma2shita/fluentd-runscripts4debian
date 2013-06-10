@@ -26,6 +26,8 @@ LOGFILE=/var/log/${NAME}/${PNAME}.log
 DAEMON_ARGS="--config /etc/${NAME}/${NAME}.conf --daemon ${PIDFILE} --log ${LOGFILE} --user ${USER} --group ${GROUP}"
 SCRIPTNAME=/etc/init.d/$NAME
 
+LANG=C ; export LANG
+
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
 
